@@ -1,3 +1,133 @@
 <svg class="background">
-  <text id="myLabel" class="defaultText"/>
+  <svg class="application-fill container">
+    <use id="tumbler-hour" href="#tumblerview">
+      <use id="hour-item0" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="12" />
+      </use>
+      <use id="hour-item1" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="1" />
+      </use>
+      <use id="hour-item2" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="2" />
+      </use>
+      <use id="hour-item3" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="3" />
+      </use>
+      <use id="hour-item4" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="4" />
+      </use>
+      <use id="hour-item5" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="5" />
+      </use>
+      <use id="hour-item6" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="6" />
+      </use>
+      <use id="hour-item7" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="7" />
+      </use>
+      <use id="hour-item8" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="8" />
+      </use>
+      <use id="hour-item9" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="9" />
+      </use>
+      <use id="hour-item10" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="10" />
+      </use>
+      <use id="hour-item11" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="11" />
+      </use>
+      <use id="hour-item12" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="12" />
+      </use>
+
+      <use id="hour-item13" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="1" />
+      </use>
+      <use id="hour-item14" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="2" />
+      </use>
+      <use id="hour-item15" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="3" />
+      </use>
+      <use id="hour-item16" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="4" />
+      </use>
+      <use id="hour-item17" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="5" />
+      </use>
+      <use id="hour-item18" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="6" />
+      </use>
+      <use id="hour-item19" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="7" />
+      </use>
+      <use id="hour-item20" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="8" />
+      </use>
+      <use id="hour-item21" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="9" />
+      </use>
+      <use id="hour-item22" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="10" />
+      </use>
+      <use id="hour-item23" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="11" />
+      </use>
+    </use>
+
+    <use id="settings-colon-container" href="#static-text" class="tumbler-colon h1">
+      <set href="#text" attributeName="text-buffer" to=":"/>
+    </use>
+
+    <use id="tumbler-mins" href="#tumblerview">
+      <use id="min-item0" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="00" />
+      </use>
+      <use id="min-item1" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="01" />
+      </use>
+      <use id="min-item2" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="02" />
+      </use>
+      <use id="min-item3" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="03" />
+      </use>
+      <use id="min-item4" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="04" />
+      </use>
+      <use id="min-item5" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="05" />
+      </use>
+      <use id="min-item6" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="06" />
+      </use>
+      <use id="min-item7" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="07" />
+      </use>
+      <use id="min-item8" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="08" />
+      </use>
+      <use id="min-item9" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="09" />
+      </use>
+      <!-- simplified for example -->
+      <use id="min-item10" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="20" />
+      </use>
+      <use id="min-item11" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="30" />
+      </use>
+      <use id="min-item12" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="40" />
+      </use>
+      <use id="min-item13" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="50" />
+      </use>
+      <use id="min-item14" href="#tumbler-item">
+        <set href="value/text" attributeName="text-buffer" to="59" />
+      </use>
+    </use>
+  </svg>
+  <use id="start-button" href="#text-button" class="text-button bottom primary " />
 </svg>
