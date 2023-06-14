@@ -13,22 +13,38 @@
 }
 
 .container {
-  height: 80%
+  height: 80%;
 }
 
+#tumbler-hour {
+  x: 24;
+  y: 70;
+  width: 120;
+  height: 50%;
+}
+#tumbler-mins {
+  x: 158;
+  y: 70;
+  width: 120;
+  height: 50%;
+}
+#tumbler-hour #value text {
+  x: 100%;
+  text-anchor: end;
+}
+.tumbler-colon {
+  x: 141;
+  y: -30;
+  width: 12;
+}
 
-#tumbler-hour
-  { x: 24;   y: 70; width: 120; height: 50%; }
-#tumbler-mins
-{ x: 158;  y: 70; width: 120; height: 50%; }
-#tumbler-hour #value text
-{ x: 100%; text-anchor: end;}
-.tumbler-colon
-{ x: 141;  y: -30; width: 12; }
-
-.application-fill           { fill: fb-black; }
+.application-fill {
+  fill: fb-black;
+}
 /* .foreground-fill            { fill: fb-white; } */
-.background-fill            { fill: fb-white; }
+.background-fill {
+  fill: fb-white;
+}
 
 #start-button #text {
   text-buffer: "BRITTANY";
