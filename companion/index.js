@@ -1,26 +1,18 @@
 import * as messaging from "messaging";
 import { me as companion } from "companion";
-import { settingsStorage } from "settings";
 import { sendMessage } from "../common";
 
 if (!companion.permissions.granted("run_background")) {
   console.warn("We're not allowed to access to run in the background!");
 }
 
-const handleSettingsChange = (evt) => {
-  console.log('setInterval');
-  console.log(evt)
-  // TODO: Get time from settings storage
+const handleSetInterval = ({ hour, minute }) => {
+  console.log("setInterval");
+  console.log(hour, minute);
+  // TODO: Get time from fs storage
   const FIVEMINUTES = 1000 * 60 * 5;
   companion.wakeInterval = FIVEMINUTES;
 };
-
-
-settingsStorage.addEventListener("change", handleSettingsChange);
-if (companion.launchReasons.settingsChanged) {
-  console.log("Settings Changed!");
-  handleSettingsChange();
-}
 
 function sendAlarm() {
   // DODO: check if alarm needs to trigger
@@ -46,7 +38,10 @@ messaging.peerSocket.addEventListener("message", (evt) => {
       returnCurrentTimer();
       break;
     }
-    case "createTimer":
+    case "createTimer": {
+      handleSetInterval(evt.data);
+      break;
+    }
     default: {
       console.log(evt.data);
       break;
