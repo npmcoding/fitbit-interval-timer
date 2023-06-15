@@ -1,5 +1,6 @@
 import * as document from "document";
 import * as messaging from "messaging";
+import { sendMessage } from "../common";
 
 const tumblerHour = document.getElementById("tumbler-hour");
 const tumblerMins = document.getElementById("tumbler-mins");
@@ -24,34 +25,25 @@ tumblerMins.addEventListener("select", (evt) => {
   console.log(`Minute: ${getMinute()}`);
 });
 
-
 const fetchTimer = () => {
-  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-    // 2
-    messaging.peerSocket.send({
-      command: "fetchTimer",
-    });
-  }
+  sendMessage({
+    command: "fetchTimer",
+  });
 };
 
 const createTimer = () => {
-  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-    messaging.peerSocket.send({
-      command: "createTimer",
-      hour: getHour(),
-      minute: getMinute(),
-    });
-  }
+  sendMessage({
+    command: "createTimer",
+    hour: getHour(),
+    minute: getMinute(),
+  });
 };
 
 const startButton = document.getElementById("start-button");
 
 startButton.addEventListener("click", (evt) => {
-  console.log(`${getHour()}:${getMinute()}`);
-
-  console.log("START");
+  console.log(`START: ${getHour()}:${getMinute()}`);
   createTimer();
-
 });
 
 const setTimer = (timer) => {
@@ -65,9 +57,18 @@ messaging.peerSocket.addEventListener("open", (evt) => {
 });
 
 messaging.peerSocket.addEventListener("message", (evt) => {
-  if (evt.data) {
-    // 5
-    setTimer(JSON.stringify(evt.data));
+  switch (evt.data?.command) {
+    // 3
+    case "setTimer": {
+      // 5
+      setTimer(JSON.stringify(evt.data));
+      break;
+    }
+    case "alarm":
+    default: {
+      console.log(JSON.stringify(evt.data));
+      break;
+    }
   }
 });
 
