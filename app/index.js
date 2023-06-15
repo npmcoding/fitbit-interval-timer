@@ -1,6 +1,7 @@
 import * as document from "document";
 import * as messaging from "messaging";
 import { sendMessage } from "../common";
+import * as fs from "fs";
 
 const tumblerHour = document.getElementById("tumbler-hour");
 const tumblerMins = document.getElementById("tumbler-mins");
@@ -25,17 +26,37 @@ tumblerMins.addEventListener("select", (evt) => {
   console.log(`Minute: ${getMinute()}`);
 });
 
-const fetchTimer = () => {
-  sendMessage({
-    command: "fetchTimer",
-  });
+const handleTriggerAlarm = () => {
+  // DODO: check if alarm needs to trigger
 };
 
-const createTimer = () => {
+const clearInterval = () => {
+  const settings = {
+    isActive: false,
+  };
+
+  fs.writeFileSync("settings.txt", settings, "cbor");
+  sendMessage({ command: "clearInterval" });
+
+  // change screen
+};
+
+const createInterval = () => {
+  const hour = getHour();
+  const minute = getMinute();
+
+  const settings = {
+    isActive: true,
+    hour,
+    minute,
+  };
+
+  fs.writeFileSync("settings.txt", settings, "cbor");
+
   sendMessage({
-    command: "createTimer",
-    hour: getHour(),
-    minute: getMinute(),
+    command: "createInterval",
+    hour,
+    minute,
   });
 };
 
@@ -43,28 +64,21 @@ const startButton = document.getElementById("start-button");
 
 startButton.addEventListener("click", (evt) => {
   console.log(`START: ${getHour()}:${getMinute()}`);
-  createTimer();
+  createInterval();
 });
-
-const setTimer = (timer) => {
-  // 6
-  console.log(`start timer at ${timer}`);
-};
 
 // 1
 messaging.peerSocket.addEventListener("open", (evt) => {
-  fetchTimer();
+  // Check for existing timer and show countdown
+  const settings = fs.readFileSync("settings.txt", "cbor");
+  console.log(JSON.stringify(settings));
 });
 
 messaging.peerSocket.addEventListener("message", (evt) => {
   switch (evt.data?.command) {
-    // 3
-    case "setTimer": {
-      // 5
-      setTimer(JSON.stringify(evt.data));
-      break;
+    case "alarm": {
+      handleTriggerAlarm();
     }
-    case "alarm":
     default: {
       console.log(JSON.stringify(evt.data));
       break;
