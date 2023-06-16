@@ -2,16 +2,18 @@ import * as document from "document";
 import * as messaging from "messaging";
 import { sendMessage } from "../common";
 import * as fs from "fs";
+import { vibration } from "haptics";
 
 const debug = true;
 
 const tumblerContainer = document.getElementById("tumbler-container");
 const countdownContainer = document.getElementById("countdown-container");
+const alarmContainer = document.getElementById("alarm-container");
 const tumblerHour = document.getElementById("tumbler-hour");
 const tumblerMins = document.getElementById("tumbler-mins");
 const startButton = document.getElementById("start-button");
 const stopButton = document.getElementById("stop-button");
-
+const alarmButton = document.getElementById("silence-alarm-button");
 
 const getHour = () => {
   const selectedIndex = parseInt(tumblerHour.value);
@@ -25,6 +27,24 @@ const getMinute = () => {
   return selectedItem.getElementById("text").text;
 };
 
+const showTumbler = () => {
+  tumblerContainer.style.display = "inline";
+  countdownContainer.style.display = "none";
+  alarmContainer.style.display = "none";
+};
+
+const showCountdown = () => {
+  tumblerContainer.style.display = "none";
+  countdownContainer.style.display = "inline";
+  alarmContainer.style.display = "none";
+};
+
+const showAlarm = () => {
+  tumblerContainer.style.display = "none";
+  countdownContainer.style.display = "none";
+  alarmContainer.style.display = "inline";
+};
+
 tumblerHour.addEventListener("select", (evt) => {
   debug && console.log(`Hour: ${getHour()}`);
 });
@@ -34,7 +54,10 @@ tumblerMins.addEventListener("select", (evt) => {
 });
 
 const handleTriggerAlarm = () => {
-  // DODO: check if alarm needs to trigger
+  // TODO: check if alarm needs to trigger
+  showAlarm();
+  vibration.start("alert");
+  // TODO: set next interval
 };
 
 const clearInterval = () => {
@@ -44,8 +67,6 @@ const clearInterval = () => {
 
   fs.writeFileSync("settings.txt", settings, "cbor");
   sendMessage({ command: "clearInterval" });
-
-  // change screen
 };
 
 const createInterval = () => {
@@ -70,16 +91,19 @@ const createInterval = () => {
 startButton.addEventListener("click", (evt) => {
   debug && console.log(`START: ${getHour()}:${getMinute()}`);
   createInterval();
-  tumblerContainer.style.display = "none";
-  countdownContainer.style.display = "inline";
+  showCountdown();
 });
 
 stopButton.addEventListener("click", (evt) => {
-  debug && console.log('STOP')
+  debug && console.log("STOP");
   clearInterval();
-  tumblerContainer.style.display = "inline";
-  countdownContainer.style.display = "none";
+  showTumbler();
+});
 
+alarmButton.addEventListener("click", (evt) => {
+  debug && console.log("alarm silenced");
+  countdownContainer.style.display = "inline";
+  alarmContainer.style.display = "none";
 });
 
 // 1

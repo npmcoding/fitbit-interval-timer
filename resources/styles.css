@@ -53,3 +53,14 @@
 #stop-button #text {
   text-buffer: "STOP";
 }
+
+#silence-alarm-button #text {
+  text-buffer: "ALARM!";
+  y: "50%";
+}
+
+#silence-alarm-button {
+  x: 0;
+  y: 0;
+  height: "100%";
+}
