@@ -4,13 +4,15 @@ import { sendMessage } from "../common";
 import * as fs from "fs";
 import { vibration } from "haptics";
 import clock from 'clock';
+import Alarm from "./alarm";
+import Interval from "./interval";
 
 const debug = true;
 
 // TODO: extracts these to functions to maintain state
 // on init, fetch from settings
-let nextAlarm = null;
-let interval = null;
+const alarm = new Alarm();
+const interval = new Interval();
 
 const tumblerContainer = document.getElementById("tumbler-container");
 const countdownContainer = document.getElementById("countdown-container");
@@ -64,9 +66,10 @@ const handleTriggerAlarm = () => {
   // TODO: check if alarm needs to trigger
   showAlarm();
   vibration.start("alert");
-  if(interval) {
-    nextAlarm += interval;
-  }
+  // START HERE
+  // TODO: check if interval is null
+  // bail out if so
+    alarm.setAlarm(interval.getInterval());
 };
 
 const clearInterval = () => {
