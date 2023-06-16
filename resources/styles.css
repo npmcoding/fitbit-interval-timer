@@ -49,3 +49,7 @@
 #start-button #text {
   text-buffer: "BRITTANY";
 }
+
+#stop-button #text {
+  text-buffer: "STOP";
+}

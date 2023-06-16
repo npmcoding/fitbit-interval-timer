@@ -3,8 +3,15 @@ import * as messaging from "messaging";
 import { sendMessage } from "../common";
 import * as fs from "fs";
 
+const debug = true;
+
+const tumblerContainer = document.getElementById("tumbler-container");
+const countdownContainer = document.getElementById("countdown-container");
 const tumblerHour = document.getElementById("tumbler-hour");
 const tumblerMins = document.getElementById("tumbler-mins");
+const startButton = document.getElementById("start-button");
+const stopButton = document.getElementById("stop-button");
+
 
 const getHour = () => {
   const selectedIndex = parseInt(tumblerHour.value);
@@ -19,11 +26,11 @@ const getMinute = () => {
 };
 
 tumblerHour.addEventListener("select", (evt) => {
-  console.log(`Hour: ${getHour()}`);
+  debug && console.log(`Hour: ${getHour()}`);
 });
 
 tumblerMins.addEventListener("select", (evt) => {
-  console.log(`Minute: ${getMinute()}`);
+  debug && console.log(`Minute: ${getMinute()}`);
 });
 
 const handleTriggerAlarm = () => {
@@ -60,18 +67,28 @@ const createInterval = () => {
   });
 };
 
-const startButton = document.getElementById("start-button");
-
 startButton.addEventListener("click", (evt) => {
-  console.log(`START: ${getHour()}:${getMinute()}`);
+  debug && console.log(`START: ${getHour()}:${getMinute()}`);
   createInterval();
+  tumblerContainer.style.display = "none";
+  countdownContainer.style.display = "inline";
+});
+
+stopButton.addEventListener("click", (evt) => {
+  debug && console.log('STOP')
+  clearInterval();
+  tumblerContainer.style.display = "inline";
+  countdownContainer.style.display = "none";
+
 });
 
 // 1
 messaging.peerSocket.addEventListener("open", (evt) => {
   // Check for existing timer and show countdown
-  const settings = fs.readFileSync("settings.txt", "cbor");
-  console.log(JSON.stringify(settings));
+  if (fs.existsSync("/private/data/settings.txt")) {
+    const settings = fs.readFileSync("settings.txt", "cbor");
+    debug && console.log(JSON.stringify(settings));
+  }
 });
 
 messaging.peerSocket.addEventListener("message", (evt) => {
@@ -80,7 +97,7 @@ messaging.peerSocket.addEventListener("message", (evt) => {
       handleTriggerAlarm();
     }
     default: {
-      console.log(JSON.stringify(evt.data));
+      debug && console.log(JSON.stringify(evt.data));
       break;
     }
   }
