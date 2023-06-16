@@ -1,5 +1,5 @@
 <svg class="background">
-  <svg id="tumbler-container" display="none">
+  <svg id="tumbler-container" display="inline">
      <section height="80%">
       <use id="tumbler-hour" href="#tumblerview">
         <use id="hour-item0" href="#tumbler-item">
@@ -132,8 +132,10 @@
     </section>
     <use id="start-button" href="#text-button" class="text-button bottom primary " />
   </svg>
-  <svg id="countdown-container" display="inline">
-    <text>Countdown</text>
+  <svg id="countdown-container" display="none">
+    <text id="countdown" x="50%" y="50%"  font-size="80" 
+     font-family="System-Regular"  text-anchor="middle"
+      text-length="20">00:00:00</text>
     <use id="stop-button" href="#text-button" class="text-button bottom primary " />
   </svg>
   <svg id="alarm-container" display="none">

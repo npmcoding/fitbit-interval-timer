@@ -3,8 +3,14 @@ import * as messaging from "messaging";
 import { sendMessage } from "../common";
 import * as fs from "fs";
 import { vibration } from "haptics";
+import clock from 'clock';
 
 const debug = true;
+
+// TODO: extracts these to functions to maintain state
+// on init, fetch from settings
+let nextAlarm = null;
+let interval = null;
 
 const tumblerContainer = document.getElementById("tumbler-container");
 const countdownContainer = document.getElementById("countdown-container");
@@ -14,6 +20,7 @@ const tumblerMins = document.getElementById("tumbler-mins");
 const startButton = document.getElementById("start-button");
 const stopButton = document.getElementById("stop-button");
 const alarmButton = document.getElementById("silence-alarm-button");
+const countdown = document.getElementById("countdown");
 
 const getHour = () => {
   const selectedIndex = parseInt(tumblerHour.value);
@@ -57,7 +64,9 @@ const handleTriggerAlarm = () => {
   // TODO: check if alarm needs to trigger
   showAlarm();
   vibration.start("alert");
-  // TODO: set next interval
+  if(interval) {
+    nextAlarm += interval;
+  }
 };
 
 const clearInterval = () => {
@@ -67,25 +76,31 @@ const clearInterval = () => {
 
   fs.writeFileSync("settings.txt", settings, "cbor");
   sendMessage({ command: "clearInterval" });
+  clock.granularity = "off"
 };
 
 const createInterval = () => {
   const hour = getHour();
   const minute = getMinute();
 
+  // TODO: calculate this
+  // Make sure it's not less than 5 min
+  interval = 1000 * 30;
+  nextAlarm = new Date(Date.now() + interval).getTime();
+
   const settings = {
     isActive: true,
-    hour,
-    minute,
+    interval,
+    nextAlarm
   };
-
   fs.writeFileSync("settings.txt", settings, "cbor");
 
   sendMessage({
     command: "createInterval",
-    hour,
-    minute,
+    interval
   });
+
+  clock.granularity = "seconds"
 };
 
 startButton.addEventListener("click", (evt) => {
@@ -102,6 +117,7 @@ stopButton.addEventListener("click", (evt) => {
 
 alarmButton.addEventListener("click", (evt) => {
   debug && console.log("alarm silenced");
+  vibration.stop();
   countdownContainer.style.display = "inline";
   alarmContainer.style.display = "none";
 });
@@ -109,6 +125,7 @@ alarmButton.addEventListener("click", (evt) => {
 // 1
 messaging.peerSocket.addEventListener("open", (evt) => {
   // Check for existing timer and show countdown
+  // Make sure the timer isn't way in the past
   if (fs.existsSync("/private/data/settings.txt")) {
     const settings = fs.readFileSync("settings.txt", "cbor");
     debug && console.log(JSON.stringify(settings));
@@ -130,3 +147,20 @@ messaging.peerSocket.addEventListener("message", (evt) => {
 messaging.peerSocket.addEventListener("error", (err) => {
   console.error(`Connection error: ${err.code} - ${err.message}`);
 });
+
+
+clock.addEventListener("tick", (evt) => {
+  if(nextAlarm){
+    console.log(evt.date.getTime());
+    const dif = nextAlarm - evt.date.getTime();
+
+    if(dif <= 0) {
+      handleTriggerAlarm();
+    }
+
+    const newTime = new Date(dif).toLocaleTimeString().slice(0, -4)
+    countdown.text = newTime;
+  } else {
+    clearInterval();
+  }
+})

@@ -12,9 +12,9 @@ const handleClearInterval = () => {
   companion.wakeInterval = undefined;
 };
 
-const handleSetInterval = ({ hour, minute }) => {
+const handleSetInterval = ({ interval }) => {
   debug && console.log("setInterval");
-  debug && console.log(hour, minute);
+  debug && console.log(interval);
 
   const FIVEMINUTES = 1000 * 60 * 5;
   companion.wakeInterval = FIVEMINUTES;
