@@ -5,7 +5,8 @@ import { sendMessage } from "../common";
 const debug = true;
 
 if (!companion.permissions.granted("run_background")) {
-  debug && console.warn("We're not allowed to access to run in the background!");
+  debug &&
+    console.warn("We're not allowed to access to run in the background!");
 }
 
 const handleClearInterval = () => {
@@ -13,17 +14,21 @@ const handleClearInterval = () => {
 };
 
 const handleSetInterval = ({ interval }) => {
-  debug && console.log("setInterval");
+  debug && console.log("handleSetInterval");
   debug && console.log(interval);
 
+  //TODO: use passed interval
   const FIVEMINUTES = 1000 * 60 * 5;
   companion.wakeInterval = FIVEMINUTES;
+  // use passed interval if more than 5 minutes
+  // const wakeInterval = interval >= FIVEMINUTES ? interval : FIVEMINUTES;
+  // companion.wakeInterval = wakeInterval;
 };
 
-function sendAlarm() {
-  debug && console.log("Wake interval happened!");
+const sendAlarm = () => {
+  debug && console.log("companion triggers alarm!");
   sendMessage({ command: "alarm" });
-}
+};
 
 companion.addEventListener("wakeinterval", sendAlarm);
 if (companion.launchReasons.wokenUp) {

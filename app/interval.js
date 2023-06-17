@@ -1,32 +1,20 @@
-import * as fs from "fs";
+import { getIntervalSettings } from "./settings";
+let _interval = null;
 
-export default class Interval {
-    constructor() {
-        this._interval = null;
-    }
-
-  getInterval() {
-    // Return existing interval
-    if (this._interval !== null) {
-      return this._interval;
-    }
-
-    if (fs.existsSync("/private/data/settings.txt")) {
-      const settings = fs.readFileSync("settings.txt", "cbor");
-      // Return last interval from settings
-        this._interval = settings?.interval || null;
-        return this._interval;
-    }
-    // Nothing currently set
-    this._interval = null;
-    return this._interval;
-  };
-
-  setInterval(interval) {
-    this._interval = interval;
-  };
-
-  clearInterval() {
-    this._interval = null;
+export const getInterval = () => {
+  if (_interval === null) {
+    // Return saved interval
+    const intervalFromSettings = getIntervalSettings();
+    _interval = intervalFromSettings;
   }
+
+  return _interval;
+};
+
+export const setInterval = (interval) => {
+  _interval = interval;
+};
+
+export const clearInterval = () => {
+  _interval = null;
 };

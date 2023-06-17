@@ -1,46 +1,24 @@
 import * as document from "document";
 import * as messaging from "messaging";
 import { sendMessage } from "../common";
-import * as fs from "fs";
 import { vibration } from "haptics";
-import clock from 'clock';
-import Alarm from "./alarm";
-import Interval from "./interval";
+import clock from "clock";
+import { alarmShouldSound, clearAlarm, getAlarm, setAlarm } from "./alarm";
+import { getInterval } from "./interval";
+import { initSettings } from "./settings";
+import { display } from "display";
+import { getIntervalFromTumbler, showTumbler } from "./tumbler";
 
 const debug = true;
 
-// TODO: extracts these to functions to maintain state
-// on init, fetch from settings
-const alarm = new Alarm();
-const interval = new Interval();
-
+const startButton = document.getElementById("start-button");
 const tumblerContainer = document.getElementById("tumbler-container");
 const countdownContainer = document.getElementById("countdown-container");
 const alarmContainer = document.getElementById("alarm-container");
-const tumblerHour = document.getElementById("tumbler-hour");
-const tumblerMins = document.getElementById("tumbler-mins");
-const startButton = document.getElementById("start-button");
+
 const stopButton = document.getElementById("stop-button");
 const alarmButton = document.getElementById("silence-alarm-button");
 const countdown = document.getElementById("countdown");
-
-const getHour = () => {
-  const selectedIndex = parseInt(tumblerHour.value);
-  const selectedItem = tumblerHour.getElementById(`hour-item${selectedIndex}`);
-  return selectedItem.getElementById("text").text;
-};
-
-const getMinute = () => {
-  const selectedIndex = tumblerMins.value;
-  const selectedItem = tumblerMins.getElementById(`min-item${selectedIndex}`);
-  return selectedItem.getElementById("text").text;
-};
-
-const showTumbler = () => {
-  tumblerContainer.style.display = "inline";
-  countdownContainer.style.display = "none";
-  alarmContainer.style.display = "none";
-};
 
 const showCountdown = () => {
   tumblerContainer.style.display = "none";
@@ -54,91 +32,82 @@ const showAlarm = () => {
   alarmContainer.style.display = "inline";
 };
 
-tumblerHour.addEventListener("select", (evt) => {
-  debug && console.log(`Hour: ${getHour()}`);
-});
+const stopTimer = () => {
+  clearAlarm();
 
-tumblerMins.addEventListener("select", (evt) => {
-  debug && console.log(`Minute: ${getMinute()}`);
-});
-
-const handleTriggerAlarm = () => {
-  // TODO: check if alarm needs to trigger
-  showAlarm();
-  vibration.start("alert");
-  // START HERE
-  // TODO: check if interval is null
-  // bail out if so
-    alarm.setAlarm(interval.getInterval());
-};
-
-const clearInterval = () => {
-  const settings = {
-    isActive: false,
-  };
-
-  fs.writeFileSync("settings.txt", settings, "cbor");
+  // clear companion.wakeInterval
   sendMessage({ command: "clearInterval" });
-  clock.granularity = "off"
+
+  // stop clock callback
+  clock.granularity = "off";
+  showTumbler();
 };
 
-const createInterval = () => {
-  const hour = getHour();
-  const minute = getMinute();
+const startTimer = (interval) => {
+  // TODO: use passed interval
+  debug && console.log("start timer interval", interval);
 
-  // TODO: calculate this
-  // Make sure it's not less than 5 min
-  interval = 1000 * 30;
-  nextAlarm = new Date(Date.now() + interval).getTime();
+  const testInterval = 1000 * 60 * 5;
+  setAlarm(testInterval);
 
-  const settings = {
-    isActive: true,
-    interval,
-    nextAlarm
-  };
-  fs.writeFileSync("settings.txt", settings, "cbor");
-
+  // set up companion.wakeInterval
   sendMessage({
     command: "createInterval",
-    interval
+    interval: testInterval,
   });
 
-  clock.granularity = "seconds"
+  // Triggers clock callback
+  clock.granularity = "seconds";
+  showCountdown();
 };
 
 startButton.addEventListener("click", (evt) => {
-  debug && console.log(`START: ${getHour()}:${getMinute()}`);
-  createInterval();
-  showCountdown();
+  // start timer based on tumbler values
+  const interval = getIntervalFromTumbler();
+  startTimer(interval);
 });
 
 stopButton.addEventListener("click", (evt) => {
   debug && console.log("STOP");
-  clearInterval();
-  showTumbler();
+  stopTimer();
 });
 
 alarmButton.addEventListener("click", (evt) => {
   debug && console.log("alarm silenced");
   vibration.stop();
-  countdownContainer.style.display = "inline";
-  alarmContainer.style.display = "none";
+  showCountdown();
 });
 
 // 1
-messaging.peerSocket.addEventListener("open", (evt) => {
-  // Check for existing timer and show countdown
-  // Make sure the timer isn't way in the past
-  if (fs.existsSync("/private/data/settings.txt")) {
-    const settings = fs.readFileSync("settings.txt", "cbor");
-    debug && console.log(JSON.stringify(settings));
-  }
+// messaging.peerSocket.addEventListener("open", (evt) => {
+//   const settings = getSettings();
+//   debug && console.log(JSON.stringify(settings));
+// });
+
+messaging.peerSocket.addEventListener("error", (err) => {
+  console.error(`Connection error: ${err.code} - ${err.message}`);
 });
+
+const handleTriggerAlarm = () => {
+  display.poke();
+  showAlarm();
+  vibration.start("alert");
+
+  // Set next alarm
+  const interval = getInterval();
+  if (!interval) {
+    stopTimer();
+  } else {
+    setAlarm(interval);
+  }
+};
 
 messaging.peerSocket.addEventListener("message", (evt) => {
   switch (evt.data?.command) {
     case "alarm": {
-      handleTriggerAlarm();
+      if (alarmShouldSound) {
+        handleTriggerAlarm();
+      }
     }
     default: {
       debug && console.log(JSON.stringify(evt.data));
@@ -147,23 +116,21 @@ messaging.peerSocket.addEventListener("message", (evt) => {
   }
 });
 
-messaging.peerSocket.addEventListener("error", (err) => {
-  console.error(`Connection error: ${err.code} - ${err.message}`);
-});
-
-
 clock.addEventListener("tick", (evt) => {
-  if(nextAlarm){
-    console.log(evt.date.getTime());
+  const nextAlarm = getAlarm();
+  if (nextAlarm) {
     const dif = nextAlarm - evt.date.getTime();
 
-    if(dif <= 0) {
+    if (dif <= 0) {
+      console.log("device triggers alarm");
       handleTriggerAlarm();
+    } else {
+      const newTime = new Date(dif).toLocaleTimeString().slice(0, -4);
+      countdown.text = newTime;
     }
-
-    const newTime = new Date(dif).toLocaleTimeString().slice(0, -4)
-    countdown.text = newTime;
   } else {
-    clearInterval();
+    stopTimer();
   }
-})
+});
+
+initSettings(startTimer);

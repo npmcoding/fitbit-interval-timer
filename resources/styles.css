@@ -57,6 +57,9 @@
 #silence-alarm-button #text {
   text-buffer: "ALARM!";
   y: "50%";
+  font-size: "75";
+  font-family: "System-Regular";
+  text-anchor: "middle";
 }
 
 #silence-alarm-button {

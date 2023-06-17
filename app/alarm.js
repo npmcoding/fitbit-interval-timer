@@ -1,42 +1,46 @@
-import * as fs from "fs";
+import { getAlarmSettings, updateSettings } from "./settings";
+import { clearInterval, setInterval } from "./interval";
 
-export default class Alarm {
-    constructor() {
-        this._nextAlarm = null;
-    }
+let _nextAlarm = null;
 
-  getAlarm() {
-    // Return existing alarm
-    if (this._nextAlarm !== null) {
-      return this._nextAlarm;
-    }
-
-    if (fs.existsSync("/private/data/settings.txt")) {
-      const settings = fs.readFileSync("settings.txt", "cbor");
-      // Return last alarm from settings if it's in the future
-      if (settings?.nextAlarm && new Date(settings.nextAlarm) > new Date()) {
-        this._nextAlarm = settings.nextAlarm;
-        return this._nextAlarm;
-      }
-    }
-    // Nothing currently set
-    this._nextAlarm = null;
-    return this._nextAlarm;
-  };
-
-  clearAlarm() {
-    this._nextAlarm = null;
+export const getAlarm = () => {
+  if (_nextAlarm === null) {
+    // Return saved alarm
+    const alarmFromSettings = getAlarmSettings();
+    _nextAlarm = alarmFromSettings;
   }
 
-  setAlarm(interval) {
-    if(!interval) {
-        this.clearAlarm();
-    }    
-    if (this._nextAlarm === null) {
-        this._nextAlarm = new Date(Date.now() + interval).getTime();
-    }
-    this._nextAlarm += interval;
+  return _nextAlarm;
+};
+
+export const clearAlarm = () => {
+  clearInterval();
+
+  _nextAlarm = null;
+  const settings = {
+    isActive: false,
+    nextAlarm: _nextAlarm,
+    interval: null,
   };
 
-
+  updateSettings(settings);
 };
+
+export const setAlarm = (interval) => {
+  if (!interval) {
+    clearAlarm();
+  }
+  setInterval(interval);
+  _nextAlarm = new Date(Date.now() + interval).getTime();
+
+  const settings = {
+    isActive: true,
+    nextAlarm: _nextAlarm,
+    interval,
+  };
+  updateSettings(settings);
+};
+
+export const alarmShouldSound = _nextAlarm
+  ? new Date().getTime() > _nextAlarm
+  : false;
