@@ -1,13 +1,6 @@
-import * as document from "document";
-
-const debug = true;
-
-const tumblerContainer = document.getElementById("tumbler-container");
-const countdownContainer = document.getElementById("countdown-container");
-const alarmContainer = document.getElementById("alarm-container");
-
-const tumblerHour = document.getElementById("tumbler-hour");
-const tumblerMins = document.getElementById("tumbler-mins");
+import { setIntervalDelay } from "./intervalDelay";
+import { tumblerHour, tumblerMins } from "./ui";
+import { debug } from "../common";
 
 const getHour = () => {
   const selectedIndex = parseInt(tumblerHour.value);
@@ -33,26 +26,16 @@ tumblerMins.addEventListener("select", (evt) => {
   debug && console.log(`Minute: ${getMinute()}`);
 });
 
-export const showTumbler = () => {
-  tumblerContainer.style.display = "inline";
-  countdownContainer.style.display = "none";
-  alarmContainer.style.display = "none";
-};
-
-export const getIntervalFromTumbler = () => {
+export const setIntervalDelayFromTumbler = () => {
   const hour = getHour();
   const minute = getMinute();
   debug && console.log(`START: ${hour}:${minute}`);
-  // 5 minute check due to companion.wakeInterval limitations
-  if (hour === 0 && minute < 5) {
-    console.warn("Can't set interval for less than 5 minutes!");
-    // return a 5 minute interval
-    return 1000 * 60 * 5;
-  }
 
   const minuteMilliseconds = 1000 * 60 * minute;
   const hourMilliseconds = 1000 * 60 * 60 * hour;
-  const interval = minuteMilliseconds + hourMilliseconds;
+  const intervalDelay = minuteMilliseconds + hourMilliseconds;
 
-  return interval;
+  // setIntervalDelay(intervalDelay);
+  const testInterval = 1000 * 15;
+  setIntervalDelay(testInterval);
 };

@@ -1,7 +1,5 @@
 import * as fs from "fs";
 
-const debug = true;
-
 export const getSettings = () => {
   if (fs.existsSync("settings.txt")) {
     const settings = fs.readFileSync("settings.txt", "cbor");
@@ -22,10 +20,10 @@ export const getAlarmSettings = () => {
   return null;
 };
 
-export const getIntervalSettings = () => {
+export const getIntervalDelaySettings = () => {
   const settings = getSettings();
   // Return last interval from settings
-  return settings?.interval || null;
+  return settings?.intervalDelay || null;
 };
 
 export const saveSettings = (settings) => {

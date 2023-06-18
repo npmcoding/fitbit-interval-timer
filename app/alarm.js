@@ -1,9 +1,12 @@
 import { getAlarmSettings, updateSettings, saveSettings } from "./settings";
-import { clearInterval, setInterval } from "./interval";
+import { clearIntervalDelay, getIntervalDelay } from "./intervalDelay";
+import { display } from "display";
+import { vibration } from "haptics";
+import { showAlarm } from "./ui";
 
 let _nextAlarm = null;
 
-export const getAlarm = () => {
+export const getNextAlarm = () => {
   if (_nextAlarm === null) {
     // Return saved alarm
     const alarmFromSettings = getAlarmSettings();
@@ -13,8 +16,8 @@ export const getAlarm = () => {
   return _nextAlarm;
 };
 
-export const clearAlarm = () => {
-  clearInterval();
+export const clearNextAlarm = () => {
+  clearIntervalDelay();
 
   _nextAlarm = null;
   const settings = {
@@ -26,20 +29,34 @@ export const clearAlarm = () => {
   saveSettings(settings);
 };
 
-export const setAlarm = (interval) => {
-  if (!interval) {
-    clearAlarm();
-  }
-  setInterval(interval);
-  _nextAlarm = new Date(Date.now() + interval).getTime();
+export const setNextAlarm = () => {
+  const intervalDelay = getIntervalDelay();
+  if (!intervalDelay) {
+    clearNextAlarm();
+  } else {
+    // Set start time
+    const newTime = new Date(intervalDelay).toLocaleTimeString().slice(0, -4);
+    countdown.text = newTime;
 
-  const settings = {
-    isActive: true,
-    nextAlarm: _nextAlarm,
-    interval,
-  };
-  updateSettings(settings);
+    _nextAlarm = new Date(Date.now() + intervalDelay).getTime();
+
+    const settings = {
+      isActive: true,
+      nextAlarm: _nextAlarm,
+      intervalDelay,
+    };
+    updateSettings(settings);
+  }
 };
 
 export const alarmShouldSound = () =>
   _nextAlarm ? new Date().getTime() > _nextAlarm : false;
+
+export const handleTriggerAlarm = () => {
+  if (alarmShouldSound()) {
+    display.poke();
+    showAlarm();
+    vibration.start("alert");
+    setNextAlarm();
+  }
+};
