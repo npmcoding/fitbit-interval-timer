@@ -10,19 +10,22 @@ if (!companion.permissions.granted("run_background")) {
 }
 
 const handleClearInterval = () => {
+  debug && console.log("handleClearInterval");
   companion.wakeInterval = undefined;
+
+  companion.removeEventListener("wakeinterval", sendAlarm);
 };
 
 const handleSetInterval = ({ interval }) => {
   debug && console.log("handleSetInterval");
   debug && console.log(interval);
 
-  //TODO: use passed interval
   const FIVEMINUTES = 1000 * 60 * 5;
-  companion.wakeInterval = FIVEMINUTES;
   // use passed interval if more than 5 minutes
-  // const wakeInterval = interval >= FIVEMINUTES ? interval : FIVEMINUTES;
-  // companion.wakeInterval = wakeInterval;
+  const wakeInterval = interval >= FIVEMINUTES ? interval : FIVEMINUTES;
+  companion.wakeInterval = wakeInterval;
+
+  companion.addEventListener("wakeinterval", sendAlarm);
 };
 
 const sendAlarm = () => {
@@ -30,7 +33,7 @@ const sendAlarm = () => {
   sendMessage({ command: "alarm" });
 };
 
-companion.addEventListener("wakeinterval", sendAlarm);
+// companion.addEventListener("wakeinterval", sendAlarm);
 if (companion.launchReasons.wokenUp) {
   debug && console.log("Componanion woken!");
   sendAlarm();

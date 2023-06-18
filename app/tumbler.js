@@ -1,5 +1,7 @@
 import * as document from "document";
 
+const debug = true;
+
 const tumblerContainer = document.getElementById("tumbler-container");
 const countdownContainer = document.getElementById("countdown-container");
 const alarmContainer = document.getElementById("alarm-container");

@@ -40,17 +40,5 @@ export const updateSettings = (settings) => {
     ...currentSettings,
     ...settings,
   };
-  debug && console.log(newSettings);
   saveSettings(newSettings);
-};
-
-export const initSettings = (startTimer) => {
-  debug && console.log("init settings");
-  const { isActive, alarm, interval } = getSettings();
-  const isAlarmInFuture = alarm && new Date(alarm) > new Date();
-  // Check for existing timer and show countdown
-  // Make sure the timer isn't way in the past
-  if (isActive && interval && isAlarmInFuture) {
-    startTimer(interval);
-  }
 };

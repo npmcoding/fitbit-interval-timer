@@ -5,9 +5,9 @@ import { vibration } from "haptics";
 import clock from "clock";
 import { alarmShouldSound, clearAlarm, getAlarm, setAlarm } from "./alarm";
 import { getInterval } from "./interval";
-import { initSettings } from "./settings";
 import { display } from "display";
 import { getIntervalFromTumbler, showTumbler } from "./tumbler";
+import { me as appbit } from "appbit";
 
 const debug = true;
 
@@ -46,7 +46,6 @@ const stopTimer = () => {
 const startTimer = (interval) => {
   // TODO: use passed interval
   debug && console.log("start timer interval", interval);
-
   const testInterval = 1000 * 60 * 5;
   setAlarm(testInterval);
 
@@ -78,11 +77,7 @@ alarmButton.addEventListener("click", (evt) => {
   showCountdown();
 });
 
-// 1
-// messaging.peerSocket.addEventListener("open", (evt) => {
-//   const settings = getSettings();
-//   debug && console.log(JSON.stringify(settings));
-// });
+messaging.peerSocket.addEventListener("open", (evt) => {});
 
 messaging.peerSocket.addEventListener("error", (err) => {
   console.error(`Connection error: ${err.code} - ${err.message}`);
@@ -105,9 +100,10 @@ const handleTriggerAlarm = () => {
 messaging.peerSocket.addEventListener("message", (evt) => {
   switch (evt.data?.command) {
     case "alarm": {
-      if (alarmShouldSound) {
+      if (alarmShouldSound()) {
         handleTriggerAlarm();
       }
+      break;
     }
     default: {
       debug && console.log(JSON.stringify(evt.data));
@@ -122,7 +118,7 @@ clock.addEventListener("tick", (evt) => {
     const dif = nextAlarm - evt.date.getTime();
 
     if (dif <= 0) {
-      console.log("device triggers alarm");
+      debug && console.log("device triggers alarm");
       handleTriggerAlarm();
     } else {
       const newTime = new Date(dif).toLocaleTimeString().slice(0, -4);
@@ -133,4 +129,5 @@ clock.addEventListener("tick", (evt) => {
   }
 });
 
-initSettings(startTimer);
+appbit.onunload = () => console.log("app unloading");
+appbit.appTimeoutEnabled = false;

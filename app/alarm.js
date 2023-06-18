@@ -1,4 +1,4 @@
-import { getAlarmSettings, updateSettings } from "./settings";
+import { getAlarmSettings, updateSettings, saveSettings } from "./settings";
 import { clearInterval, setInterval } from "./interval";
 
 let _nextAlarm = null;
@@ -23,7 +23,7 @@ export const clearAlarm = () => {
     interval: null,
   };
 
-  updateSettings(settings);
+  saveSettings(settings);
 };
 
 export const setAlarm = (interval) => {
@@ -41,6 +41,5 @@ export const setAlarm = (interval) => {
   updateSettings(settings);
 };
 
-export const alarmShouldSound = _nextAlarm
-  ? new Date().getTime() > _nextAlarm
-  : false;
+export const alarmShouldSound = () =>
+  _nextAlarm ? new Date().getTime() > _nextAlarm : false;
