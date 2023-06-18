@@ -44,15 +44,14 @@ const stopTimer = () => {
 };
 
 const startTimer = (interval) => {
-  // TODO: use passed interval
   debug && console.log("start timer interval", interval);
-  const testInterval = 1000 * 60 * 5;
-  setAlarm(testInterval);
+  // const testInterval = 1000 * 60 * 5;
+  setAlarm(interval);
 
   // set up companion.wakeInterval
   sendMessage({
     command: "createInterval",
-    interval: testInterval,
+    interval,
   });
 
   // Triggers clock callback
