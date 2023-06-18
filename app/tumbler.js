@@ -26,8 +26,10 @@ tumblerHour.addEventListener("select", (evt) => {
 });
 
 tumblerMins.addEventListener("select", (evt) => {
-  // TODO: check if hour === 0 and minute < 5
-  // then set it to 5
+  // Set a minimum time of 5 minutes
+  if (getHour() === "0" && getMinute() === "00") {
+    tumblerMins.value = 0;
+  }
   debug && console.log(`Minute: ${getMinute()}`);
 });
 
