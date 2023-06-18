@@ -128,5 +128,8 @@ clock.addEventListener("tick", (evt) => {
   }
 });
 
-appbit.onunload = () => console.log("app unloading");
+appbit.onunload = () => {
+  console.log("app unloading");
+  sendMessage({ command: "clearInterval" });
+};
 appbit.appTimeoutEnabled = false;
