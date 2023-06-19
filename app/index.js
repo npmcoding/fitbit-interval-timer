@@ -1,11 +1,11 @@
 import { vibration } from "haptics";
 import clock from "clock";
 import {
-  clearNextAlarm,
-  getNextAlarm,
-  setNextAlarm,
+  clearCountdown,
+  getNextCountdownEndTime,
+  setNextCountdownEndTime,
   handleTriggerAlarm,
-} from "./alarm";
+} from "./countdown";
 import { getIntervalDelay } from "./intervalDelay";
 import { setIntervalDelayFromTumbler } from "./tumbler";
 import { me as appbit } from "appbit";
@@ -18,13 +18,15 @@ import {
   showCountdown,
 } from "./ui";
 import { debug } from "../common";
+import { clearIntervalDelay } from "./intervalDelay";
 
 let _intervalID = null;
 
 const stopTimer = () => {
   clearInterval(_intervalID);
   _intervalID = null;
-  clearNextAlarm();
+  clearIntervalDelay();
+  clearCountdown();
 
   // stop clock callback
   clock.granularity = "off";
@@ -36,9 +38,9 @@ const startTimer = () => {
   debug && console.log("start timer interval", _intervalID, intervalDelay);
 
   if (!_intervalID && intervalDelay) {
+    setNextCountdownEndTime();
     // start countdown to trigger alarm
     _intervalID = setInterval(handleTriggerAlarm, intervalDelay);
-    setNextAlarm();
 
     // Triggers clock callback
     clock.granularity = "seconds";
@@ -64,14 +66,16 @@ alarmButton.addEventListener("click", (evt) => {
 });
 
 clock.addEventListener("tick", (evt) => {
-  const nextAlarm = getNextAlarm();
-  if (nextAlarm) {
-    const dif = nextAlarm - evt.date.getTime();
+  const nextCountdownEndTime = getNextCountdownEndTime();
+  if (nextCountdownEndTime) {
+    const dif = nextCountdownEndTime - evt.date.getTime();
 
     if (dif >= 0) {
       const newTime = new Date(dif).toLocaleTimeString().slice(0, -4);
       countdown.text = newTime;
     }
+  } else {
+    stopTimer();
   }
 });
 

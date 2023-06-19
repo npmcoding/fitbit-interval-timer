@@ -23,12 +23,10 @@ const setMinimumTime = () => {
 
 tumblerHour.addEventListener("select", (evt) => {
   setMinimumTime();
-  debug && console.log(`Hour: ${getHour()}`);
 });
 
 tumblerMins.addEventListener("select", (evt) => {
   setMinimumTime();
-  debug && console.log(`Minute: ${getMinute()}`);
 });
 
 export const setIntervalDelayFromTumbler = () => {
@@ -40,7 +38,5 @@ export const setIntervalDelayFromTumbler = () => {
   const hourMilliseconds = 1000 * 60 * 60 * hour;
   const intervalDelay = minuteMilliseconds + hourMilliseconds;
 
-  // setIntervalDelay(intervalDelay);
-  const testInterval = 1000 * 15;
-  setIntervalDelay(testInterval);
+  setIntervalDelay(intervalDelay);
 };
