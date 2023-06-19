@@ -14,15 +14,20 @@ const getMinute = () => {
   return selectedItem.getElementById("text").text;
 };
 
+const setMinimumTime = () => {
+  if (getHour() === "0" && getMinute() === "00") {
+    // Set tumbler to 5 minutes
+    tumblerMins.value = 0;
+  }
+}
+
 tumblerHour.addEventListener("select", (evt) => {
+  setMinimumTime();
   debug && console.log(`Hour: ${getHour()}`);
 });
 
 tumblerMins.addEventListener("select", (evt) => {
-  // Set a minimum time of 5 minutes
-  if (getHour() === "0" && getMinute() === "00") {
-    tumblerMins.value = 0;
-  }
+  setMinimumTime();
   debug && console.log(`Minute: ${getMinute()}`);
 });
 
