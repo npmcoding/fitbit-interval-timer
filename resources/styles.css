@@ -9,7 +9,7 @@
 }
 
 .background {
-  viewport-fill: pink;
+  viewport-fill: fb-black;
 }
 
 .container {
@@ -41,25 +41,29 @@
 .application-fill {
   fill: fb-black;
 }
-/* .foreground-fill            { fill: fb-white; } */
-.background-fill {
+.foreground-fill {
   fill: fb-white;
+}
+.background-fill {
+  fill: fb-black;
 }
 
 #start-button #text {
   text-buffer: "START";
+  fill: fb-white;
 }
 
 #stop-button #text {
   text-buffer: "STOP";
+  fill: fb-white;
 }
 
 #silence-alarm-button #text {
   text-buffer: "ALARM!";
-  y: "50%";
-  font-size: "75";
+  font-size: "55";
   font-family: "System-Regular";
   text-anchor: "middle";
+  fill: fb-white;
 }
 
 #silence-alarm-button {

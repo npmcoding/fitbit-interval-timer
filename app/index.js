@@ -19,6 +19,7 @@ import {
 } from "./ui";
 import { debug } from "../common";
 import { clearIntervalDelay } from "./intervalDelay";
+import "./settings";
 
 let _intervalID = null;
 
