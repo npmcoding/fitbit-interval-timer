@@ -1,6 +1,6 @@
 <svg id="app-container" class="background">
-  <rect id="bg-container" width="100%" height="100%" x="0" y="0" fill="pink" />
-  <svg id="tumbler-container" display="inline" fill="white">
+  <rect id="bg-container" width="100%" height="100%" x="0" y="0" fill="#000000" />
+  <svg id="tumbler-container" display="inline" fill="#FFFFFF">
      <section height="80%">
       <use id="tumbler-hour" href="#tumblerview">
         <use id="hour-item0" href="#tumbler-item">
@@ -95,7 +95,9 @@
       text-length="20" fill="white">00:00:00</text>
     <use id="stop-button" href="#text-button" class="text-button bottom primary" fill="#696969" />
   </svg>
-  <svg id="alarm-container" display="none">
-    <use id="silence-alarm-button" href="#textarea-button" class="text-button primary" fill="#000000" />
+  <svg id="alarm-container" display="none" pointer-events="visible">
+    <rect id="silence-alarm-button">
+      <textarea id="silence-alarm-button-text" />
+    </rect>
   </svg>
 </svg>

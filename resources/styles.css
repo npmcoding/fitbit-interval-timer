@@ -58,16 +58,20 @@
   fill: fb-white;
 }
 
-#silence-alarm-button #text {
-  text-buffer: "ALARM!";
-  font-size: "55";
+#silence-alarm-button-text {
+  font-size: "50";
   font-family: "System-Regular";
   text-anchor: "middle";
-  fill: fb-white;
+  text-length: "1000";
+  fill: "#FFFFFF";
+  display-align: "center";
+  width: "100%";
 }
 
 #silence-alarm-button {
   x: 0;
   y: 0;
+  width: "100%";
   height: "100%";
+  fill: "#000000";
 }

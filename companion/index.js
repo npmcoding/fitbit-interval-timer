@@ -16,8 +16,9 @@ if (companion.launchReasons.settingsChanged) {
 messaging.peerSocket.addEventListener("open", () => {
   // init settings
   const bgColor = settingsStorage.getItem("bgColor");
+  const alarmColor = settingsStorage.getItem("alarmColor");
   const alarmText = settingsStorage.getItem("alarmText");
-  sendMessage({ key: "init", bgColor, alarmText });
+  sendMessage({ key: "init", bgColor, alarmColor, alarmText });
 });
 
 messaging.peerSocket.addEventListener("error", (err) => {

@@ -4,21 +4,44 @@ const Settings = (props) => {
       <Section
         title={
           <Text bold align="center">
-            Color Settings
+            Background Color Settings
           </Text>
         }
       >
         <ColorSelect
           settingsKey="bgColor"
           colors={[
-            { color: "tomato" },
-            { color: "sandybrown" },
-            { color: "gold" },
-            { color: "aquamarine" },
-            { color: "deepskyblue" },
-            { color: "plum" },
-            { color: "white" },
-            { color: "black" },
+            { color: "#E0E1E0" },
+            { color: "#EFE30B" },
+            { color: "#F99D1C" },
+            { color: "#E3484A" },
+            { color: "#A0DAE1" },
+            { color: "#53B8A6" },
+            { color: "#F9CF1E" },
+            { color: "#FFFFFF" },
+            { color: "#000000" },
+          ]}
+        />
+      </Section>
+      <Section
+        title={
+          <Text bold align="center">
+            Alarm Color Settings
+          </Text>
+        }
+      >
+        <ColorSelect
+          settingsKey="alarmColor"
+          colors={[
+            { color: "#E0E1E0" },
+            { color: "#EFE30B" },
+            { color: "#F99D1C" },
+            { color: "#E3484A" },
+            { color: "#A0DAE1" },
+            { color: "#53B8A6" },
+            { color: "#F9CF1E" },
+            { color: "#FFFFFF" },
+            { color: "#000000" },
           ]}
         />
       </Section>

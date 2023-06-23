@@ -6,7 +6,7 @@ const bgContainer = $("bg-container");
 
 export const startButton = $("start-button");
 export const stopButton = $("stop-button");
-export const alarmButton = $("silence-alarm-button");
+export const alarmButton = $("alarm-container");
 export const countdown = $("countdown");
 
 export const tumblerHour = $("tumbler-hour");
@@ -17,6 +17,7 @@ const countdownContainer = $("countdown-container");
 const alarmContainer = $("alarm-container");
 
 const silenceAlarmButton = $("silence-alarm-button");
+const silenceAlarmButtonText = $("silence-alarm-button-text");
 
 export const showTumbler = () => {
   tumblerContainer.style.display = "inline";
@@ -38,17 +39,25 @@ export const showAlarm = () => {
 
 export const setBgColor = (color) => {
   if (color) {
-    const textColor = color === "black" ? "white" : "black";
+    const textColor = color === "#000000" ? "#FFFFFF" : "#000000";
     tumblerContainer.style.fill = textColor;
     countdown.style.fill = textColor;
     bgContainer.style.fill = color;
   }
 };
 
+export const setAlarmColor = (color) => {
+  if (color) {
+    const textColor = color === "#000000" ? "#FFFFFF" : "#000000";
+    silenceAlarmButtonText.style.fill = textColor;
+    silenceAlarmButton.style.fill = color;
+  }
+};
+
 export const setAlarmText = (text) => {
   if (text && text.length > 0) {
-    silenceAlarmButton.text = text;
+    silenceAlarmButtonText.text = text;
   } else {
-    silenceAlarmButton.text = "Alarm!";
+    silenceAlarmButtonText.text = "ALARM!";
   }
 };

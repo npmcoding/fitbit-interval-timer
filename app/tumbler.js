@@ -19,7 +19,7 @@ const setMinimumTime = () => {
     // Set tumbler to 5 minutes
     tumblerMins.value = 0;
   }
-}
+};
 
 tumblerHour.addEventListener("select", (evt) => {
   setMinimumTime();

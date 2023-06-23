@@ -1,5 +1,5 @@
 import * as messaging from "messaging";
-import { setAlarmText, setBgColor } from "./ui";
+import { setAlarmText, setBgColor, setAlarmColor } from "./ui";
 
 const parseAlarmText = (evtData) => {
   const alarmText = JSON.parse(evtData);
@@ -16,14 +16,21 @@ messaging.peerSocket.addEventListener("message", (evt) => {
   switch (evt.data?.key) {
     case "init": {
       const bgColor = JSON.parse(evt.data.bgColor);
+      const alarmColor = JSON.parse(evt.data.alarmColor);
       const alarmText = parseAlarmText(evt.data.alarmText);
       setBgColor(bgColor);
+      setAlarmColor(alarmColor);
       setAlarmText(alarmText);
       break;
     }
     case "bgColor": {
       const bgColor = JSON.parse(evt.data.value);
       setBgColor(bgColor);
+      break;
+    }
+    case "alarmColor": {
+      const alarmColor = JSON.parse(evt.data.value);
+      setAlarmColor(alarmColor);
       break;
     }
     case "alarmText": {
