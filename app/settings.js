@@ -1,5 +1,6 @@
 import * as messaging from "messaging";
 import { setAlarmText, setBgColor, setAlarmColor } from "./ui";
+import { debug } from "../common";
 
 const parseAlarmText = (evtData) => {
   const alarmText = JSON.parse(evtData);
@@ -9,7 +10,7 @@ const parseAlarmText = (evtData) => {
 messaging.peerSocket.addEventListener("open", (evt) => {});
 
 messaging.peerSocket.addEventListener("error", (err) => {
-  console.error(`Connection error: ${err.code} - ${err.message}`);
+  debug && console.error(`Connection error: ${err.code} - ${err.message}`);
 });
 
 messaging.peerSocket.addEventListener("message", (evt) => {

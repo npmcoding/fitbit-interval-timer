@@ -10,7 +10,7 @@ if (!companion.permissions.granted("run_background")) {
 
 if (companion.launchReasons.settingsChanged) {
   // Settings were changed while the companion was not running
-  console.log("settings have changed!");
+  debug && console.log("settings have changed!");
 }
 
 messaging.peerSocket.addEventListener("open", () => {
